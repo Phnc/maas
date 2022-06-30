@@ -51,7 +51,7 @@ public class CounterExampleAstah {
 	            objPresent = new HashMap<>();
 	            
 	            IDiagram[] diagrams = AstahAPI.getAstahAPI().getProjectAccessor().getProject().getDiagrams();	            
-	            IDiagram diagram = AstahAPI.getAstahAPI().getViewManager().getDiagramViewManager().getCurrentDiagram();
+	            IDiagram diagram = AstahAPI.getAstahAPI().getProjectAccessor().getProject().getDiagrams()[0];
 	            
 	            ProjectAccessor prjAccessor = AstahAPI.getAstahAPI().getProjectAccessor();
 	            IModel project = prjAccessor.getProject();
@@ -83,7 +83,7 @@ public class CounterExampleAstah {
 	            TransactionManager.endTransaction();
             	//diretorio, formato (png,jpg,emf), dpi -> 96 default
             	try {			            		
-            		String dir = ad.exportImage("C:\\Users\\Paulo\\PCC", "png", 96);
+            		//String dir = ad.exportImage("C:\\Users\\Paulo\\PCC", "png", 96);
             	}
             	catch(Exception ex) {
             		System.out.println(ex.getMessage());

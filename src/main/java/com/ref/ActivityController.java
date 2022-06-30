@@ -37,11 +37,11 @@ public class ActivityController {
 	
 	public static boolean firstInteration = true;
 	
-	public static final String FDR3_PROPERTY_FILE = "";
+	public static final String FDR3_PROPERTY_FILE = "src/main/resources/ref.properties";
 	//System.getProperty("user.home") + System.getProperty("file.separator") + "ref.properties"
-	public static final String FDR3_LOCATION_PROPERTY = "src/main/resources/FDR";
+	public static final String FDR3_LOCATION_PROPERTY = "fdr3_location";
 	//"fdr3_location"
-	public static final String FDR3_JAR_LOCATION_PROPERTY = "src/main/resources/FDR/bin/fdr.jar";
+	public static final String FDR3_JAR_LOCATION_PROPERTY = "fdr3_jar_location";
 	
 	private static ActivityController controller;
 	
