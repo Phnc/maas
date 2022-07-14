@@ -20,9 +20,9 @@ public class ADDefineObjectNode {
 	private ADUtils adUtils;
 
 	public ADDefineObjectNode(IActivity ad, HashMap<Pair<IActivity, String>, ArrayList<String>> alphabetNode2,
-			HashMap<Pair<IActivity, String>, String> syncChannelsEdge2,
-			HashMap<Pair<IActivity, String>, String> syncObjectsEdge2, HashMap<String, String> objectEdges,
-			ADUtils adUtils) {
+							  HashMap<Pair<IActivity, String>, String> syncChannelsEdge2,
+							  HashMap<Pair<IActivity, String>, String> syncObjectsEdge2, HashMap<String, String> objectEdges,
+							  ADUtils adUtils) {
 		this.ad = ad;
 		this.alphabetNode = alphabetNode2;
 		this.syncObjectsEdge = syncObjectsEdge2;
@@ -53,7 +53,7 @@ public class ADDefineObjectNode {
 			} catch (NullPointerException e) {
 				throw new ParsingException("Object flow does not have a type.");
 			}
-			
+
 			String oeIn;
 			if (syncObjectsEdge.containsKey(key)) {
 				oeIn = syncObjectsEdge.get(key);
@@ -76,16 +76,16 @@ public class ADDefineObjectNode {
 				objectNode.append("SKIP)");
 			}
 		}
-		
+
 		objectNode.append("); ");
 
 		adUtils.update(alphabet, objectNode, 1, activityNode.getOutgoings().length, false);
-		
+
 		adUtils.getLocal(alphabet, objectNode, nameObjectUnique,
 				adUtils.nameDiagramResolver(activityNode.getName()), nameObjectUnique, parameterType);
 
 		objectNode.append("(");
-		
+
 		for (int i = 0; i < outFlows.length; i++) {
 			Pair<IActivity, String> key = new Pair<IActivity, String>(ad, outFlows[i].getId());
 			String typeObject = ((IObjectFlow) outFlows[i]).getBase().getName();

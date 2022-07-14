@@ -20,9 +20,9 @@ public class ADDefineFork {
 	private ADUtils adUtils;
 
 	public ADDefineFork(IActivity ad, HashMap<Pair<IActivity, String>, ArrayList<String>> alphabetNode2,
-			HashMap<Pair<IActivity, String>, String> syncChannelsEdge2,
-			HashMap<Pair<IActivity, String>, String> syncObjectsEdge2, HashMap<String, String> objectEdges,
-			ADUtils adUtils) {
+						HashMap<Pair<IActivity, String>, String> syncChannelsEdge2,
+						HashMap<Pair<IActivity, String>, String> syncObjectsEdge2, HashMap<String, String> objectEdges,
+						ADUtils adUtils) {
 		this.ad = ad;
 		this.alphabetNode = alphabetNode2;
 		this.syncChannelsEdge = syncChannelsEdge2;
@@ -42,7 +42,7 @@ public class ADDefineFork {
 		IFlow[] outFlows = activityNode.getOutgoings();
 		IFlow[] inFlows = activityNode.getIncomings();
 
-	
+
 		if (inFlows.length != 1) {
 			throw new ParsingException("Fork node must have exactly one incoming edge.");
 		}
@@ -55,53 +55,53 @@ public class ADDefineFork {
 		// case input is object
 		if (inEdge instanceof IObjectFlow) {
 			String oeIn;
-        	String typeObject;
-        	try {
+			String typeObject;
+			try {
 				typeObject = ((IObjectFlow)inEdge).getBase().getName();
 			} catch (NullPointerException e) {
 				throw new ParsingException("Object flow does not have a type.");
 			}
-        	if (syncObjectsEdge.containsKey(key)) {
-                oeIn = syncObjectsEdge.get(key);
-                if (!objectEdges.containsKey(oeIn)) {
-	                objectEdges.put(oeIn, typeObject);
+			if (syncObjectsEdge.containsKey(key)) {
+				oeIn = syncObjectsEdge.get(key);
+				if (!objectEdges.containsKey(oeIn)) {
+					objectEdges.put(oeIn, typeObject);
 				}
-            } else {
-            	 oeIn = adUtils.createOE();
-                 syncObjectsEdge.put(key, oeIn);
-                 objectEdges.put(oeIn, typeObject);
-            }
-			
-        	adUtils.oe(alphabet, forkNode, oeIn, "?x", " -> ");			
+			} else {
+				oeIn = adUtils.createOE();
+				syncObjectsEdge.put(key, oeIn);
+				objectEdges.put(oeIn, typeObject);
+			}
 
-        	adUtils.update(alphabet, forkNode, inFlows.length, outFlows.length, false);
+			adUtils.oe(alphabet, forkNode, oeIn, "?x", " -> ");
+
+			adUtils.update(alphabet, forkNode, inFlows.length, outFlows.length, false);
 
 			forkNode.append("(");
-			
+
 			for (int i = 0; i < outFlows.length; i++) { // creates the parallel output channels
-				
+
 				if (!(outFlows[i] instanceof IObjectFlow)) {
-					throw new ParsingException("If the incoming edge of fork node "+activityNode.getName()+" is a ObjectFlow, then\r\n" + 
+					throw new ParsingException("If the incoming edge of fork node "+activityNode.getName()+" is a ObjectFlow, then\r\n" +
 							"all outgoing edges shall be ObjectFlows");
 				}
 				key = new Pair<IActivity, String>(ad, outFlows[i].getId());
 				String oe;
-	        	try {
+				try {
 					typeObject = ((IObjectFlow)outFlows[i]).getBase().getName();
 				} catch (NullPointerException e) {
 					throw new ParsingException("Object flow does not have a type.");
 				}
 				if (syncObjectsEdge.containsKey(key)) {
 					oe = syncObjectsEdge.get(key);
-	                if (!objectEdges.containsKey(oe)) {
-		                objectEdges.put(oe, typeObject);
+					if (!objectEdges.containsKey(oe)) {
+						objectEdges.put(oe, typeObject);
 					}
 				} else {
 					oe = adUtils.createOE();
 					syncObjectsEdge.put(key, oe);
 					objectEdges.put(oe, typeObject);
 				}
-				
+
 				forkNode.append("(");
 
 				if (i >= 0 && i < outFlows.length - 1) {
@@ -120,14 +120,14 @@ public class ADDefineFork {
 				syncChannelsEdge.put(key, ceIn);
 			}
 			adUtils.ce(alphabet, forkNode, ceIn, " -> ");
-			
+
 			adUtils.update(alphabet, forkNode, inFlows.length, outFlows.length, false);
 
 			forkNode.append("(");
-			
+
 			for (int i = 0; i < outFlows.length; i++) { // creates the parallel output channels
 				if (outFlows[i] instanceof IObjectFlow) {
-					throw new ParsingException("If the incoming edge of fork node "+activityNode.getName()+" is a ControlFlow, then\r\n" + 
+					throw new ParsingException("If the incoming edge of fork node "+activityNode.getName()+" is a ControlFlow, then\r\n" +
 							"all outgoing edges shall be ControlFlows");
 				}
 				key = new Pair<IActivity, String>(ad, outFlows[i].getId());

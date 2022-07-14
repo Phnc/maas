@@ -64,10 +64,10 @@ public class ADDefineMainNodes {
 
         mainNode.append(" [|{|update_" + nameDiagram + ",clear_" + nameDiagram + ",endDiagram_" + nameDiagram + "|}|] ");
         mainNode.append("TokenManager_" + nameDiagram + "_t(ID_"+nameDiagram+",0,0))");
-        
+
         if(firstDiagram.equals(ad.getId()) && ADParser.alphabetPool.size() > 0) {//If is the first diagram
-        	mainNode.append("[|AlphabetPool|]pools(ID_"+nameDiagram+"))");
-        }       
+            mainNode.append("[|AlphabetPool|]pools(ID_"+nameDiagram+"))");
+        }
 
         if (lockChannel.size() > 0) {
             mainNode.append(" [|{|");
@@ -85,24 +85,24 @@ public class ADDefineMainNodes {
             mainNode.append(" [|{|");
             StringBuilder getSet = new StringBuilder();
             for (String input : parameterNodesInput.keySet()) {
-            	getSet.append("get_" + input + "_" + nameDiagram + ",set_" + input +"_" + nameDiagram+",");
+                getSet.append("get_" + input + "_" + nameDiagram + ",set_" + input +"_" + nameDiagram+",");
                 mainNode.append("get_" + input + "_" + nameDiagram + ",");
                 mainNode.append("set_" + input + "_" + nameDiagram + ",");
             }
 
             for (String output : parameterNodesOutput.keySet()) {
-            	getSet.append("get_" + output + "_" + nameDiagram + ",set_" + output +"_" + nameDiagram+",");
+                getSet.append("get_" + output + "_" + nameDiagram + ",set_" + output +"_" + nameDiagram+",");
                 mainNode.append("get_" + output + "_" + nameDiagram + ",");
                 mainNode.append("set_" + output + "_" + nameDiagram + ",");
-            }       
-        	mainNode.append("endActivity_" + nameDiagram + "|}|] ");          
-            
+            }
+            mainNode.append("endActivity_" + nameDiagram + "|}|] ");
+
             if(!parameterNodesInput.isEmpty() || !parameterNodesOutput.isEmpty()) {
-            	getSet.replace(getSet.lastIndexOf(","), getSet.lastIndexOf(",")+1,"");//tira a ultima ,
-            	mainNode.append("Mem_" + nameDiagram + "(ID_"+nameDiagram+")) \\{|"+getSet+"|}\n");
-            	
+                getSet.replace(getSet.lastIndexOf(","), getSet.lastIndexOf(",")+1,"");//tira a ultima ,
+                mainNode.append("Mem_" + nameDiagram + "(ID_"+nameDiagram+")) \\{|"+getSet+"|}\n");
+
             }else {
-            	mainNode.append("Mem_" + nameDiagram + "(ID_"+nameDiagram+"))\n");
+                mainNode.append("Mem_" + nameDiagram + "(ID_"+nameDiagram+"))\n");
             }
         } else if (lockChannel.size() > 0) {
             mainNode.append("Lock_" + nameDiagram + ")\n");

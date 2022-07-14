@@ -38,9 +38,9 @@ public class ADDefineFlowFinal {
         String endDiagram = "END_DIAGRAM_" + adUtils.nameDiagramResolver(ad.getName());
         HashMap<String, String> nameObjects = new HashMap<>();
         IFlow[] inFlows = activityNode.getIncomings();
-        
+
         if(nameFlowFinal.equals("_" + adUtils.nameDiagramResolver(ad.getName()))) {
-        	throw new ParsingException("The final flow node is unnamed\n");
+            throw new ParsingException("The final flow node is unnamed\n");
         }
         flowFinal.append(nameFlowFinal + "(id) = ");
 
@@ -58,51 +58,51 @@ public class ADDefineFlowFinal {
 
         flowFinal.append("(");
         for (int i = 0; i < ceInitials.size(); i++) {
-        	Pair<IActivity,String> key = new Pair<IActivity, String>(ad,ceInitials.get(i));
-        	if (inFlows[i] instanceof IObjectFlow) {
-				String typeObject;
-				try {
-					typeObject = ((IObjectFlow) inFlows[i]).getBase().getName();
-				} catch (NullPointerException e) {
-					throw new ParsingException("Object flow does not have a type.");
-				}
-				String oeIn;
-				if (syncObjectsEdge.containsKey(key)) {
-					oeIn = syncObjectsEdge.get(key);
-					if (!objectEdges.containsKey(oeIn)) {
-						objectEdges.put(oeIn, typeObject);
-					}
-				} else {
-					oeIn = adUtils.createOE();
-					syncObjectsEdge.put(key, oeIn);
-					objectEdges.put(oeIn, typeObject);
-				}
-				flowFinal.append("(");
+            Pair<IActivity,String> key = new Pair<IActivity, String>(ad,ceInitials.get(i));
+            if (inFlows[i] instanceof IObjectFlow) {
+                String typeObject;
+                try {
+                    typeObject = ((IObjectFlow) inFlows[i]).getBase().getName();
+                } catch (NullPointerException e) {
+                    throw new ParsingException("Object flow does not have a type.");
+                }
+                String oeIn;
+                if (syncObjectsEdge.containsKey(key)) {
+                    oeIn = syncObjectsEdge.get(key);
+                    if (!objectEdges.containsKey(oeIn)) {
+                        objectEdges.put(oeIn, typeObject);
+                    }
+                } else {
+                    oeIn = adUtils.createOE();
+                    syncObjectsEdge.put(key, oeIn);
+                    objectEdges.put(oeIn, typeObject);
+                }
+                flowFinal.append("(");
 
-				if (i >= 0 && i < ceInitials.size() - 1) {
-					adUtils.ce(alphabet, flowFinal, oeIn, "?x" + " -> SKIP) [] ");
-				} else {
-					adUtils.ce(alphabet, flowFinal, oeIn, "?x" + " -> SKIP)");
-				}
+                if (i >= 0 && i < ceInitials.size() - 1) {
+                    adUtils.ce(alphabet, flowFinal, oeIn, "?x" + " -> SKIP) [] ");
+                } else {
+                    adUtils.ce(alphabet, flowFinal, oeIn, "?x" + " -> SKIP)");
+                }
 
-			} else {
-				String ceIn;
+            } else {
+                String ceIn;
 
-				if (syncChannelsEdge.containsKey(key)) {
-					ceIn = syncChannelsEdge.get(key);
-				} else {
-					ceIn = adUtils.createCE();
-					syncChannelsEdge.put(key, ceIn);
-				}
-				
-				flowFinal.append("(");
+                if (syncChannelsEdge.containsKey(key)) {
+                    ceIn = syncChannelsEdge.get(key);
+                } else {
+                    ceIn = adUtils.createCE();
+                    syncChannelsEdge.put(key, ceIn);
+                }
 
-				if (i >= 0 && i < ceInitials.size() - 1) {
-					adUtils.ce(alphabet, flowFinal, ceIn, " -> SKIP) [] ");
-				} else {
-					adUtils.ce(alphabet, flowFinal, ceIn, " -> SKIP)");
-				}
-			}
+                flowFinal.append("(");
+
+                if (i >= 0 && i < ceInitials.size() - 1) {
+                    adUtils.ce(alphabet, flowFinal, ceIn, " -> SKIP) [] ");
+                } else {
+                    adUtils.ce(alphabet, flowFinal, ceIn, " -> SKIP)");
+                }
+            }
 
         }
 
@@ -116,7 +116,7 @@ public class ADDefineFlowFinal {
         flowFinal.append(nameFlowFinal + "(id) /\\ " + endDiagram + "(id)\n");
 
         alphabet.add("endDiagram_" + adUtils.nameDiagramResolver(ad.getName())+".id");
-    	Pair<IActivity,String> key = new Pair<IActivity, String>(ad,adUtils.nameDiagramResolver(activityNode.getName()));
+        Pair<IActivity,String> key = new Pair<IActivity, String>(ad,adUtils.nameDiagramResolver(activityNode.getName()));
         alphabetNode.put(key, alphabet);
 
         activityNode = null;

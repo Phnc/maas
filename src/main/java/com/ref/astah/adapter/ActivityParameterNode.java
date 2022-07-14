@@ -2,16 +2,14 @@ package com.ref.astah.adapter;
 
 import com.ref.exceptions.WellFormedException;
 import com.ref.interfaces.activityDiagram.IActivityParameterNode;
-import com.ref.interfaces.activityDiagram.IClass;
 import com.ref.interfaces.activityDiagram.IFlow;
 
 public class ActivityParameterNode extends ObjectNode implements IActivityParameterNode{
-	private IClass base;
 
 	public ActivityParameterNode(com.change_vision.jude.api.inf.model.IActivityParameterNode activityParameterNode) throws WellFormedException {
-		super(activityParameterNode);		
+		super(activityParameterNode);
 	}
-	
+
 	@Override
 	public IFlow[] getIncomings() {
 		return this.incomings;
@@ -42,9 +40,5 @@ public class ActivityParameterNode extends ObjectNode implements IActivityParame
 		return ((com.change_vision.jude.api.inf.model.IActivityParameterNode)activityNode).getStereotypes();
 	}
 
-	@Override
-	public IClass getBase() {
-		return this.base;
-	}
 
 }

@@ -11,7 +11,7 @@ public abstract class ADAlphabet {
 	protected HashMap<Pair<IActivity,String>, String> syncObjectsEdge;
 	protected HashMap<Pair<IActivity,String>, ArrayList<String>> parameterAlphabetNode;
 	protected IActivity ad;
-	
+
 	public ADAlphabet(IActivity ad) {
 		this.ad = ad;
 		alphabetAD = new HashMap<>();
@@ -19,7 +19,7 @@ public abstract class ADAlphabet {
 		syncObjectsEdge = new HashMap<>();
 		parameterAlphabetNode = new HashMap<>();
 	}
-	
+
 	public HashMap<Pair<IActivity, String>, ArrayList<String>> getAlphabetAD() {
 		return alphabetAD;
 	}
@@ -52,14 +52,14 @@ public abstract class ADAlphabet {
 		this.parameterAlphabetNode = parameterAlphabetNode;
 	}
 
-	public void add(ADAlphabet adAlphabet) {		
+	public void add(ADAlphabet adAlphabet) {
 	}
-	
+
 	public IActivity getAd() {
 		return ad;
 	}
 	public void setAd(IActivity ad) {
 		this.ad = ad;
 	}
-	
+
 }

@@ -95,4 +95,41 @@ public class MaasApplication {
 			return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
+
+	@PostMapping("/upload2")
+	public ResponseEntity<?> handleFileUpload2(@RequestParam("file")MultipartFile file){
+		String fileName = file.getOriginalFilename();
+		try{
+			file.transferTo(new File("C:\\upload\\" + fileName));
+
+			ProjectAccessor projectAccessor = AstahAPI.getAstahAPI().getProjectAccessor();
+			projectAccessor.open("C:\\upload\\" + fileName);
+
+			INamedElement[] findElements = findElements(projectAccessor);
+
+			IActivityDiagram ad = (IActivityDiagram) findElements[0];
+
+			ActivityController ac = ActivityController.getInstance();
+			CheckingProgressBar bar = new CheckingProgressBar();
+			ac.AstahInvocation(ad, ActivityController.VerificationType.DETERMINISM, bar);
+
+			bar.dispose();
+
+			projectAccessor.save();
+			projectAccessor.close();
+
+			Path path = Paths.get("C:\\upload\\" + fileName);
+			ByteArrayResource resource = new ByteArrayResource(Files.readAllBytes(path));
+
+			HttpHeaders headers = new HttpHeaders(); headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=file.astah");
+
+			return ResponseEntity.ok()
+					.headers(headers)
+					.contentType(MediaType.APPLICATION_OCTET_STREAM)
+					.body(resource);
+
+		} catch (Exception e){
+			return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
 }

@@ -19,9 +19,9 @@ public class ADDefineFinalNode {
 	private ADUtils adUtils;
 
 	public ADDefineFinalNode(IActivity ad, HashMap<Pair<IActivity, String>, ArrayList<String>> alphabetNode2,
-			HashMap<Pair<IActivity, String>, String> syncChannelsEdge2,
-			HashMap<Pair<IActivity, String>, String> syncObjectsEdge2, HashMap<String, String> objectEdges,
-			ADUtils adUtils) {
+							 HashMap<Pair<IActivity, String>, String> syncChannelsEdge2,
+							 HashMap<Pair<IActivity, String>, String> syncObjectsEdge2, HashMap<String, String> objectEdges,
+							 ADUtils adUtils) {
 		this.ad = ad;
 		this.alphabetNode = alphabetNode2;
 		this.syncChannelsEdge = syncChannelsEdge2;
@@ -91,9 +91,9 @@ public class ADDefineFinalNode {
 					ceIn = adUtils.createCE();
 					syncChannelsEdge.put(key, ceIn);
 				}
-				
+
 				finalNode.append("(");
-				
+
 				if (i >= 0 && i < ceInitials.size() - 1) {
 					adUtils.ce(alphabet, finalNode, ceIn, " -> SKIP) [] ");
 				} else {

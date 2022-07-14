@@ -19,16 +19,16 @@ public class ADDefineAction {
     private HashMap<Pair<IActivity,String>, ArrayList<String>> alphabetNode;
     private ADUtils adUtils;
 
-    public ADDefineAction(IActivity ad, HashMap<Pair<IActivity, String>, ArrayList<String>> alphabetNode2, 
-    		ADUtils adUtils) {
+    public ADDefineAction(IActivity ad, HashMap<Pair<IActivity, String>, ArrayList<String>> alphabetNode2,
+                          ADUtils adUtils) {
         this.ad = ad;
         this.alphabetNode = alphabetNode2;
         this.adUtils = adUtils;
     }
-    
-    
+
+
     public String defineAction(IActivityNode activityNode) throws ParsingException {
-    	StringBuilder action = new StringBuilder();
+        StringBuilder action = new StringBuilder();
         ArrayList<String> alphabet = new ArrayList<>();
         String nameAction = adUtils.nameDiagramResolver(activityNode.getName()) + "_" + adUtils.nameDiagramResolver(ad.getName());
         String nameActionTermination = adUtils.nameDiagramResolver(activityNode.getName()) + "_" + adUtils.nameDiagramResolver(ad.getName()) + "_t";
@@ -42,10 +42,10 @@ public class ADDefineAction {
         int countInFlowPin = 0;
         int countOutFlowPin = 0;
         if(Character.isDigit(nameAction.charAt(0))) {
-        	throw new ParsingException("The node name "+adUtils.nameDiagramResolver(activityNode.getName())+" cannot start with a number\n");
+            throw new ParsingException("The node name "+adUtils.nameDiagramResolver(activityNode.getName())+" cannot start with a number\n");
         }
-        
-        
+
+
         //if node has opaque expressions
         String definition = activityNode.getDefinition();
         String[] definitionFinal = new String[0];
@@ -59,8 +59,8 @@ public class ADDefineAction {
 
         //inputs of the action
         adUtils.incomingEdges(activityNode, action, alphabet, inFlows, inPins, namesMemoryLocal, typeMemoryLocal);
-        
-        
+
+
         //defining the event of the action 
         adUtils.event(alphabet, nameAction, action);
 
@@ -83,7 +83,7 @@ public class ADDefineAction {
                 }
             }
         }
-        
+
         //count input flows and output flows to calculate the update channel
         for (int i = 0; i < inPins.length; i++) {
             countInFlowPin += inPins[i].getIncomings().length;
@@ -98,7 +98,7 @@ public class ADDefineAction {
             adUtils.getLocal(alphabet, action, nameObj, adUtils.nameDiagramResolver(activityNode.getName()), nameObj,typeMemoryLocal.get(nameObj));
         }
 
-        
+
         adUtils.outgoingEdges(action, alphabet, outFlows, outPins, definitionFinal, null);
 
         // defining the recursion
@@ -149,5 +149,5 @@ public class ADDefineAction {
         alphabetNode.put(pair, alphabet);
 
         return action.toString();
-    }	
+    }
 }

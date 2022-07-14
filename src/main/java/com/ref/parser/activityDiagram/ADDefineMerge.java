@@ -21,10 +21,10 @@ public class ADDefineMerge {
 	private ADUtils adUtils;
 
 	public ADDefineMerge(IActivity ad, HashMap<Pair<IActivity, String>, ArrayList<String>> alphabetNode2,
-			HashMap<Pair<IActivity, String>, String> syncChannelsEdge2,
-			HashMap<Pair<IActivity, String>, String> syncObjectsEdge2, HashMap<String, String> objectEdges,
-			HashMap<String, String> parameterNodesInput, List<ArrayList<String>> unionList,
-			HashMap<String, String> typeUnionList, ADUtils adUtils) {
+						 HashMap<Pair<IActivity, String>, String> syncChannelsEdge2,
+						 HashMap<Pair<IActivity, String>, String> syncObjectsEdge2, HashMap<String, String> objectEdges,
+						 HashMap<String, String> parameterNodesInput, List<ArrayList<String>> unionList,
+						 HashMap<String, String> typeUnionList, ADUtils adUtils) {
 		this.ad = ad;
 		this.alphabetNode = alphabetNode2;
 		this.syncChannelsEdge = syncChannelsEdge2;
@@ -118,16 +118,16 @@ public class ADDefineMerge {
 				}
 			}
 		}
-		
+
 		merge.append("); ");
 		Pair<IActivity, String> key = new Pair<IActivity, String>(ad, outFlows[0].getId());
 		if (!nameObjectUnique.equals("")) {
 			String typeObject = ((IObjectFlow) outFlows[0]).getBase().getName();
-			
+
 			adUtils.getLocal(alphabet, merge, nameObjectUnique, adUtils.nameDiagramResolver(activityNode.getName()),
 					nameObjectUnique, typeObject);
-			
-			
+
+
 			String oe; // creates output channels
 			if (syncObjectsEdge.containsKey(key)) {
 				oe = syncObjectsEdge.get(key);
@@ -139,7 +139,7 @@ public class ADDefineMerge {
 				syncObjectsEdge.put(key, oe);
 				objectEdges.put(oe, typeObject);
 			}
-			
+
 			adUtils.oe(alphabet, merge, oe, "!" + nameObjectUnique, " -> ");
 
 			merge.append(nameMerge + "(id)\n");
@@ -167,7 +167,7 @@ public class ADDefineMerge {
 
 		} else {
 			String ce; // creates output channels
-			
+
 			if (syncChannelsEdge.containsKey(key)) {
 				ce = syncChannelsEdge.get(key);
 			} else {

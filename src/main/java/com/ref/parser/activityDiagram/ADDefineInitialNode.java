@@ -48,30 +48,30 @@ public class ADDefineInitialNode {
 
         initialNode.append("(");
         for (int i = 0; i < outFlows.length; i++) { // creates the parallel output channels
-			if (outFlows[i] instanceof IObjectFlow) {
-				throw new ParsingException("All Outgoings of the InitialNode "+ activityNode.getName()+ " must be a controlFlow.\n");
-			}
-			String ce;
+            if (outFlows[i] instanceof IObjectFlow) {
+                throw new ParsingException("All Outgoings of the InitialNode "+ activityNode.getName()+ " must be a controlFlow.\n");
+            }
+            String ce;
             Pair<IActivity,String> key = new Pair<IActivity, String>(ad, outFlows[i].getId());
 
-			if (syncChannelsEdge.containsKey(key)) {
-				ce = syncChannelsEdge.get(key);
-			} else {
-				ce = adUtils.createCE();
-				syncChannelsEdge.put(key, ce);
-			}
+            if (syncChannelsEdge.containsKey(key)) {
+                ce = syncChannelsEdge.get(key);
+            } else {
+                ce = adUtils.createCE();
+                syncChannelsEdge.put(key, ce);
+            }
 
-			initialNode.append("(");
+            initialNode.append("(");
 
-			if (i >= 0 && i < outFlows.length - 1) {
-				adUtils.ce(alphabet, initialNode, ce, " -> SKIP) ||| ");
-			} else {
-				adUtils.ce(alphabet, initialNode, ce, " -> SKIP)");
-			}
-		}
+            if (i >= 0 && i < outFlows.length - 1) {
+                adUtils.ce(alphabet, initialNode, ce, " -> SKIP) ||| ");
+            } else {
+                adUtils.ce(alphabet, initialNode, ce, " -> SKIP)");
+            }
+        }
 
         initialNode.append(")\n");
-        
+
         initialNode.append(nameInitialNodeTermination + "(id) = ");
         initialNode.append(nameInitialNode + "(id) /\\ END_DIAGRAM_"+ diagram +"(id)\n");
         alphabet.add("endDiagram_" + adUtils.nameDiagramResolver(ad.getName())+".id");

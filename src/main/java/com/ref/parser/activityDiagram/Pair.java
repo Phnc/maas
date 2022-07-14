@@ -7,13 +7,13 @@ import java.io.Serializable;
  * <p>
  * A convenience class to represent name-value pairs.
  * </p>
- * 
+ *
  * @since JavaFX 2.0
  */
 public class Pair<K, V extends Comparable> implements Serializable, Comparable<Pair<K, V>> {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 2180918202341866070L;
 	/**
@@ -23,7 +23,7 @@ public class Pair<K, V extends Comparable> implements Serializable, Comparable<P
 
 	/**
 	 * Gets the key for this pair.
-	 * 
+	 *
 	 * @return key for this pair
 	 */
 	public K getKey() {
@@ -37,7 +37,7 @@ public class Pair<K, V extends Comparable> implements Serializable, Comparable<P
 
 	/**
 	 * Gets the value for this pair.
-	 * 
+	 *
 	 * @return value for this pair
 	 */
 	public V getValue() {
@@ -46,7 +46,7 @@ public class Pair<K, V extends Comparable> implements Serializable, Comparable<P
 
 	/**
 	 * Creates a new pair
-	 * 
+	 *
 	 * @param key The key for this pair 62 * @param value The value to use for this
 	 *            pair 63
 	 */

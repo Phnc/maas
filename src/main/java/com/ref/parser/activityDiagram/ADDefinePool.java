@@ -14,7 +14,7 @@ public class ADDefinePool {
     private String firstDiagram;
     private List<Pair<String, Integer>> countAccept;
     private ADUtils adUtils;
-	private HashMap<String, List<String>> signalPins;//<Signal,tipos dos pinos dele>
+    private HashMap<String, List<String>> signalPins;//<Signal,tipos dos pinos dele>
 
     public ADDefinePool(IActivity ad, HashMap<String, List<IActivity>> signalChannels2, HashMap<String, List<String>> signalPins, String firstDiagram, List<Pair<String, Integer>> countAccept, ADUtils adUtils) {
         this.ad = ad;
@@ -29,25 +29,25 @@ public class ADDefinePool {
         StringBuilder pool = new StringBuilder();
         String nameDiagram = adUtils.nameDiagramResolver(ad.getName());
         List<String> keySignalChannels = new ArrayList<String>();
-    	keySignalChannels.addAll(signalChannels.keySet());
-    	
+        keySignalChannels.addAll(signalChannels.keySet());
+
         if (firstDiagram.equals(ad.getId())) {
-        	
-        	if(!signalChannels.isEmpty()) {
-	        	String poolDatatype = "datatype POOLNAME = ";
-	        	pool.append(poolDatatype);
-        	
-	        	for(String signal: keySignalChannels) {
-	        		pool.append(signal + "|");
-	        	}
-	        	if(pool.lastIndexOf("|") != -1) pool.replace(pool.lastIndexOf("|"),pool.lastIndexOf("|")+1,"\n");
-        	
-	        	for(String signal: keySignalChannels) {
-	        		pool.append("POOL(id,"+signal+") = pool_"+signal+"_t(id,<>)\n");
-	        	}
-	        	pool.append("pools(id) =[|{|endDiagram_"+nameDiagram+".id|}|]x:POOLNAME @ POOL(id,x)\n");
-        	}
-        	
+
+            if(!signalChannels.isEmpty()) {
+                String poolDatatype = "datatype POOLNAME = ";
+                pool.append(poolDatatype);
+
+                for(String signal: keySignalChannels) {
+                    pool.append(signal + "|");
+                }
+                if(pool.lastIndexOf("|") != -1) pool.replace(pool.lastIndexOf("|"),pool.lastIndexOf("|")+1,"\n");
+
+                for(String signal: keySignalChannels) {
+                    pool.append("POOL(id,"+signal+") = pool_"+signal+"_t(id,<>)\n");
+                }
+                pool.append("pools(id) =[|{|endDiagram_"+nameDiagram+".id|}|]x:POOLNAME @ POOL(id,x)\n");
+            }
+
             for (String signal: keySignalChannels) {
                 String poolName = "pool_" + signal;
                 String eventName = "event_" + signal + "_" + nameDiagram;
@@ -74,7 +74,7 @@ public class ADDefinePool {
 
                 pool.append(poolName + "_t(id,l) = " + poolName + "(l) /\\ END_DIAGRAM_" + nameDiagram + "(id)\n");
             }
-            
+
         }
 
         return pool.toString();

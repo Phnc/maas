@@ -32,122 +32,122 @@ public class ADDefineDecision {
         this.objectEdges = objectEdges;
         this.adUtils = adUtils;
     }
-    
+
     public String defineDecision(IActivityNode activityNode) throws ParsingException {
-    	StringBuilder decision = new StringBuilder();
+        StringBuilder decision = new StringBuilder();
         ArrayList<String> alphabet = new ArrayList<>();
         String nameDecision = adUtils.nameDiagramResolver(activityNode.getName()) + "_" + adUtils.nameDiagramResolver(ad.getName());
         String nameDecisionTermination = adUtils.nameDiagramResolver(activityNode.getName()) + "_" + adUtils.nameDiagramResolver(ad.getName()) + "_t";
         String endDiagram = "END_DIAGRAM_" + adUtils.nameDiagramResolver(ad.getName());
         IFlow[] outFlows = activityNode.getOutgoings();
         IFlow[] inFlows = activityNode.getIncomings();
-        
+
 
         if (inFlows.length != 1) {
-			throw new ParsingException("Decision node must have exactly one incoming edge.");
-		}
-       
+            throw new ParsingException("Decision node must have exactly one incoming edge.");
+        }
+
         IFlow inEdge = inFlows[0];
         Pair<IActivity,String> key = new Pair<IActivity, String>(ad,inEdge.getId());
-        
+
         decision.append(nameDecision + "(id) = ");
-        
+
         // case input is object
         if (inEdge instanceof IObjectFlow) {
-        	String oeIn;
-        	String typeObject;
-        	try {
-				typeObject = ((IObjectFlow)inEdge).getBase().getName();
-			} catch (NullPointerException e) {
-				throw new ParsingException("Object flow does not have a type.");
-			}
-        	if (syncObjectsEdge.containsKey(key)) {
+            String oeIn;
+            String typeObject;
+            try {
+                typeObject = ((IObjectFlow)inEdge).getBase().getName();
+            } catch (NullPointerException e) {
+                throw new ParsingException("Object flow does not have a type.");
+            }
+            if (syncObjectsEdge.containsKey(key)) {
                 oeIn = syncObjectsEdge.get(key);
                 if (!objectEdges.containsKey(oeIn)) {
-	                objectEdges.put(oeIn, typeObject);
-				}
+                    objectEdges.put(oeIn, typeObject);
+                }
             } else {
-            	 oeIn = adUtils.createOE();
-                 syncObjectsEdge.put(key, oeIn);
-                 objectEdges.put(oeIn, typeObject);
+                oeIn = adUtils.createOE();
+                syncObjectsEdge.put(key, oeIn);
+                objectEdges.put(oeIn, typeObject);
             }
 
-        	IFlow obEdge = inEdge;
-        	while (!(obEdge.getSource() instanceof IObjectNode)) {
-        		obEdge = obEdge.getSource().getIncomings()[0];
-        	}
-        	
-        	
-        	String input = ADUtils.nameResolver(obEdge.getSource().getName());
-            
-            
+            IFlow obEdge = inEdge;
+            while (!(obEdge.getSource() instanceof IObjectNode)) {
+                obEdge = obEdge.getSource().getIncomings()[0];
+            }
+
+
+            String input = ADUtils.nameResolver(obEdge.getSource().getName());
+
+
             adUtils.oe(alphabet, decision, oeIn, "?" + input, " -> ");
 
             decision.append("(");
-            
+
             List<String> prevGuard = new ArrayList<>();
-            
-            
+
+
             // output channels
             for (int i = 0; i < outFlows.length; i++) {    //creates the parallel output channels
-                
-            	if (!(outFlows[i] instanceof IObjectFlow)) {
-					throw new ParsingException("As the incoming edge of the decision node "+ activityNode.getName() + " is an ObjectFlow, then all outgoing edges\r\n" + 
-							"shall be ObjectFlows");
-				}
-            	
-            	String outputType;
-            	try {
-            		outputType = ((IObjectFlow)outFlows[i]).getBase().getName();
-    			} catch (NullPointerException e) {
-    				throw new ParsingException("Object flow does not have a type.");
-    			}
-            	
-            	if (!typeObject.equals(outputType)) {
-            		throw new ParsingException("Incoming edge type and outgoing edge type must be the same.");
-				}
-            	
-            	String oeOut = "";
-                
+
+                if (!(outFlows[i] instanceof IObjectFlow)) {
+                    throw new ParsingException("As the incoming edge of the decision node "+ activityNode.getName() + " is an ObjectFlow, then all outgoing edges\r\n" +
+                            "shall be ObjectFlows");
+                }
+
+                String outputType;
+                try {
+                    outputType = ((IObjectFlow)outFlows[i]).getBase().getName();
+                } catch (NullPointerException e) {
+                    throw new ParsingException("Object flow does not have a type.");
+                }
+
+                if (!typeObject.equals(outputType)) {
+                    throw new ParsingException("Incoming edge type and outgoing edge type must be the same.");
+                }
+
+                String oeOut = "";
+
                 key = new Pair<IActivity, String>(ad,outFlows[i].getId());
                 if (syncObjectsEdge.containsKey(key)) {
                     oeOut = syncObjectsEdge.get(key);
                     if (!objectEdges.containsKey(oeOut)) {
-    	                objectEdges.put(oeOut, outputType);
-    				}
+                        objectEdges.put(oeOut, outputType);
+                    }
                 } else {
-                	 oeOut = adUtils.createOE();
-                     syncObjectsEdge.put(key, oeOut);
-                     objectEdges.put(oeOut, outputType);
+                    oeOut = adUtils.createOE();
+                    syncObjectsEdge.put(key, oeOut);
+                    objectEdges.put(oeOut, outputType);
                 }
-                   
+
                 if(!adUtils.nameDiagramResolver(outFlows[i].getGuard()).equalsIgnoreCase("else")) {//If the guard is not else
-                	decision.append(outFlows[i].getGuard() == "" ? "true & (dc -> ": (outFlows[i].getGuard() + " & (dc -> "));//if the guard is empty then it is assumed true
-                	prevGuard.add(outFlows[i].getGuard()); //saves the guard for the next else
+                    decision.append(outFlows[i].getGuard() == "" ? "true & (dc -> ": (outFlows[i].getGuard() + " & (dc -> "));//if the guard is empty then it is assumed true
+                    prevGuard.add(outFlows[i].getGuard()); //saves the guard for the next else
                 }else {
-                	
-                	boolean first = true;
-                	
-                	for (String prev : prevGuard) {
-                		if (first) {
-                			decision.append("not(" + prev + ") ");
-                			first = false;
-                		} else {
-                			decision.append("and not(" + prev + ") ");
-                		}
-                	}
-                	
-                	decision.append("& (dc -> ");
+
+                    boolean first = true;
+
+                    for (String prev : prevGuard) {
+                        if (first) {
+                            decision.append("not(" + prev + ") ");
+                            first = false;
+                        } else {
+                            decision.append("and not(" + prev + ") ");
+                        }
+                    }
+
+                    decision.append("& (dc -> ");
 //                	decision.append("not "+prevGuard.get(prevGuard.size()-1) + " & (dc -> ");
 //                	prevGuard.remove(prevGuard.size()-1);
                 }
-                
+
                 if (!alphabet.contains("dc")) {
                     alphabet.add("dc");
-                }             
+                }
 
                 if (i >= 0 && i < outFlows.length - 1) {
-                	adUtils.oe(alphabet, decision, oeOut, "!" + input, " -> SKIP) [] ");
+                    adUtils.oe(alphabet, decision, oeOut, "!" + input, " -> SKIP) [] ");
                 } else {
                     adUtils.oe(alphabet, decision, oeOut, "!" + input, " -> SKIP)");
                 }
@@ -163,30 +163,30 @@ public class ADDefineDecision {
             alphabet.add("endDiagram_" + adUtils.nameDiagramResolver(ad.getName())+".id");
             key = new Pair<IActivity, String>(ad,adUtils.nameDiagramResolver(activityNode.getName()));
             alphabetNode.put(key, alphabet);
-            
-		} else { // when input is control
 
-			Pair<IActivity, String> sync = new Pair<IActivity, String>(ad, inFlows[0].getId());
+        } else { // when input is control
+
+            Pair<IActivity, String> sync = new Pair<IActivity, String>(ad, inFlows[0].getId());
 
             String ceIn;
-           
+
             if (syncChannelsEdge.containsKey(sync)) {
                 ceIn = syncChannelsEdge.get(sync);
             } else {
-            	ceIn = adUtils.createCE();
+                ceIn = adUtils.createCE();
                 syncChannelsEdge.put(sync, ceIn);
             }
-                       
-            adUtils.ce(alphabet, decision, ceIn, " -> ");            
+
+            adUtils.ce(alphabet, decision, ceIn, " -> ");
 
             String allGuards = "";
             int countGuards = 0;
 
             for (int i = 0; i < outFlows.length; i++) {
-            	if (outFlows[i] instanceof IObjectFlow) {
-            		throw new ParsingException("As the incoming edge of the decision node "+ activityNode.getName() + " is an ControlFlow, then all outgoing edges\r\n" + 
-    						"shall be ControlFlows");
-				}
+                if (outFlows[i] instanceof IObjectFlow) {
+                    throw new ParsingException("As the incoming edge of the decision node "+ activityNode.getName() + " is an ControlFlow, then all outgoing edges\r\n" +
+                            "shall be ControlFlows");
+                }
                 if (outFlows[i].getGuard().length() > 0 &&
                         !adUtils.nameDiagramResolver(outFlows[i].getGuard()).equalsIgnoreCase("else")) {
                     countGuards = adUtils.addCountGuard(nameDecision + "_guard");
@@ -202,15 +202,15 @@ public class ADDefineDecision {
             decision.append("(");
 
             for (int i = 0; i < outFlows.length; i++) {    //creates the parallel output channels
-            	String ce;
+                String ce;
                 key = new Pair<IActivity, String>(ad,outFlows[i].getId());
 
-            	if (syncChannelsEdge.containsKey(key)) {
-    				ce = syncChannelsEdge.get(key);
-    			} else {
-    				ce = adUtils.createCE();
-    				syncChannelsEdge.put(key, ce);
-    			}
+                if (syncChannelsEdge.containsKey(key)) {
+                    ce = syncChannelsEdge.get(key);
+                } else {
+                    ce = adUtils.createCE();
+                    syncChannelsEdge.put(key, ce);
+                }
 
                 // Guard treatment
                 if (outFlows[i].getGuard().length() == 0) {
@@ -253,8 +253,8 @@ public class ADDefineDecision {
             alphabet.add("endDiagram_" + adUtils.nameDiagramResolver(ad.getName())+".id");
             key = new Pair<IActivity, String>(ad,adUtils.nameDiagramResolver(activityNode.getName()));
             alphabetNode.put(key, alphabet);
-		}
+        }
         return decision.toString();
     }
-    
+
 }

@@ -22,13 +22,13 @@ public class ADDefineInputParameterNode {
     private ArrayList<String> alphabetAllInitialAndParameter;
     private ADUtils adUtils;
     private HashMap<Pair<IActivity, String>, ArrayList<String>> alphabetNode;
-	private HashMap<String,String> parameterNodesInput;
+    private HashMap<String,String> parameterNodesInput;
 
 
-    public ADDefineInputParameterNode(IActivity ad, HashMap<Pair<IActivity, String>, ArrayList<String>> parameterAlphabetNode2, 
-    		HashMap<Pair<IActivity, String>, String> syncObjectsEdge2, HashMap<String, String> objectEdges, 
-    		List<String> allInitial, ArrayList<String> alphabetAllInitialAndParameter, ADUtils adUtils,
-    		HashMap<Pair<IActivity, String>, ArrayList<String>> alphabetNode2,HashMap<String,String> parameterNodesInput) {
+    public ADDefineInputParameterNode(IActivity ad, HashMap<Pair<IActivity, String>, ArrayList<String>> parameterAlphabetNode2,
+                                      HashMap<Pair<IActivity, String>, String> syncObjectsEdge2, HashMap<String, String> objectEdges,
+                                      List<String> allInitial, ArrayList<String> alphabetAllInitialAndParameter, ADUtils adUtils,
+                                      HashMap<Pair<IActivity, String>, ArrayList<String>> alphabetNode2,HashMap<String,String> parameterNodesInput) {
         this.ad = ad;
         this.parameterAlphabetNode = parameterAlphabetNode2;
         this.syncObjectsEdge = syncObjectsEdge2;
@@ -48,11 +48,11 @@ public class ADDefineInputParameterNode {
         IFlow[] inFlows = activityNode.getIncomings();
 
         try {
-			parameterNodesInput.put(adUtils.nameDiagramResolver(activityNode.getName()), ((IActivityParameterNode) activityNode).getBase().getName());
-		} catch (Exception e) {
-			throw new ParsingException("Parameter node "+activityNode.getName()+" without base type\n");
-		}
-        
+            parameterNodesInput.put(adUtils.nameDiagramResolver(activityNode.getName()),((IActivityParameterNode) activityNode).getBase().getName());
+        } catch (Exception e) {
+            throw new ParsingException("Parameter node "+activityNode.getName()+" without base type\n");
+        }
+
         parameterNode.append(nameParameterNode + "(id) = ");
 
         adUtils.update(alphabet, parameterNode, inFlows.length, outFlows.length, false);
@@ -61,21 +61,21 @@ public class ADDefineInputParameterNode {
         parameterNode.append("(");
 
         for (int i = 0; i < outFlows.length; i++) {    //creates the parallel output channels
-        	String typeObject = ((IActivityParameterNode)activityNode).getBase().getName();
-        	Pair<IActivity,String> key = new Pair<IActivity, String>(ad,outFlows[i].getId());
-        	
-        	String oe; // creates output channels
-			if (syncObjectsEdge.containsKey(key)) {
-				oe = syncObjectsEdge.get(key);
-				if (!objectEdges.containsKey(oe)) {
-					objectEdges.put(oe, typeObject);
-				}
-			} else {
-				oe = adUtils.createOE();
-				syncObjectsEdge.put(key, oe);
-				objectEdges.put(oe, typeObject);
-			}
-        	        	
+            String typeObject = ((IActivityParameterNode)activityNode).getBase().getName();
+            Pair<IActivity,String> key = new Pair<IActivity, String>(ad,outFlows[i].getId());
+
+            String oe; // creates output channels
+            if (syncObjectsEdge.containsKey(key)) {
+                oe = syncObjectsEdge.get(key);
+                if (!objectEdges.containsKey(oe)) {
+                    objectEdges.put(oe, typeObject);
+                }
+            } else {
+                oe = adUtils.createOE();
+                syncObjectsEdge.put(key, oe);
+                objectEdges.put(oe, typeObject);
+            }
+
             parameterNode.append("(");
 
             if (i >= 0 && i < outFlows.length - 1) {
@@ -95,8 +95,8 @@ public class ADDefineInputParameterNode {
                 alphabetAllInitialAndParameter.add(channel);
             }
         }
-        
+
         return parameterNode.toString();
     }
-    
+
 }

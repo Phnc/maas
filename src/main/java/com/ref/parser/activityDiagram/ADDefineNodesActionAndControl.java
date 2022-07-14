@@ -64,8 +64,10 @@ public class ADDefineNodesActionAndControl {
     private ADDefineObjectNode dObjectNode;
     private ADDefineSignal dSignal;
     private ADDefineAccept dAccept;
+    private ADDefineValueSpecification dValueSpecification;
     private HashMap<String, Pair<String, String>> parameterSignal;
-	private HashMap<String, List<String>> signalPins;
+    private HashMap<String, List<String>> signalPins;
+
 
     public ADDefineNodesActionAndControl(IActivity ad, IActivityDiagram adDiagram, HashMap<String, Integer> countCall, HashMap<Pair<IActivity, String>, ArrayList<String>> alphabetNode2,
                                          HashMap<Pair<IActivity, String>, ArrayList<String>> parameterAlphabetNode2, HashMap<Pair<IActivity, String>, String> syncChannelsEdge2,
@@ -112,59 +114,71 @@ public class ADDefineNodesActionAndControl {
         this.signalChannelsLocal = signalChannelsLocal;
         this.adParser = adParser;
     }
-    
-    
-    
-    public String defineNodes() throws ParsingException {
-    	StringBuilder nodes = new StringBuilder();
-    	
-    	for (IActivityNode activityNode : ad.getActivityNodes()) {
-    		 if (activityNode instanceof IAction) {
-                 if (((IAction) activityNode).isCallBehaviorAction()) {
-                     nodes.append(defineCallBehaviour(activityNode));
-                 } else if (((IAction) activityNode).isSendSignalAction()) {
-                     nodes.append(defineSignal(activityNode));
-                 } else if (((IAction) activityNode).isAcceptEventAction()) {
-                     nodes.append(defineAccept(activityNode));
-                 } else {//TODO else if value specification(new class)
-                     nodes.append(defineAction(activityNode));    // create action node and set next action node
-                 }
-             } else if (activityNode instanceof IControlNode) {
-                 if (((IControlNode) activityNode).isFinalNode()) {
-                     nodes.append(defineFinalNode(activityNode)); // create final node and set next action node
-                 } else if (((IControlNode) activityNode).isFlowFinalNode()) {
-                     nodes.append(defineFlowFinal(activityNode)); // create flow final and set next action node
-                 } else if (((IControlNode) activityNode).isInitialNode()) {
-                     nodes.append(defineInitialNode(activityNode)); // create initial node and set next action node
-                 } else if (((IControlNode) activityNode).isForkNode()) {
-                	 nodes.append(defineFork(activityNode)); // create fork node and set next action node
-                 } else if (((IControlNode) activityNode).isJoinNode()) {
-                	 nodes.append(defineJoin(activityNode)); // create join node and set next action node
-                 } else if (((IControlNode) activityNode).isDecisionNode()) {
-                	 nodes.append(defineDecision(activityNode)); // create decision node and set next action node                          
-                 }else if(((IControlNode) activityNode).isMergeNode()){
-                 	nodes.append(defineMerge(activityNode)); // create merge node and set next action node
-                 }
-             } else if (activityNode instanceof IActivityParameterNode) {
-                 if (activityNode.getOutgoings().length > 0) {
-                	 nodes.append(defineInputParameterNode(activityNode));
-                 } else if (activityNode.getIncomings().length > 0) {
-                	 nodes.append(defineOutputParameterNode(activityNode));
-                 } else {
-                     activityNode = null;
-                 }
 
-             } else if (activityNode instanceof IObjectNode && !(activityNode instanceof IPin)) {
-            	 nodes.append(defineObjectNode(activityNode));
-             }
-		}
-    	
-    	
-    	
-    	
-    	
-    	return nodes.toString();
+
+
+    public String defineNodes() throws ParsingException {
+        StringBuilder nodes = new StringBuilder();
+
+        for (IActivityNode activityNode : ad.getActivityNodes()) {
+            if (activityNode instanceof IAction) {
+                if (((IAction) activityNode).isCallBehaviorAction()) {
+                    nodes.append(defineCallBehaviour(activityNode));
+                } else if (((IAction) activityNode).isSendSignalAction()) {
+                    nodes.append(defineSignal(activityNode));
+                } else if (((IAction) activityNode).isAcceptEventAction()) {
+                    nodes.append(defineAccept(activityNode));
+                } else if(((IAction) activityNode).getName().startsWith("ValueSpecificationAction")){//TODO ver se essa é a melhor forma
+                    nodes.append(defineValueSpecification(activityNode));
+                } else {
+                    nodes.append(defineAction(activityNode));    // create action node and set next action node
+                }
+            } else if (activityNode instanceof IControlNode) {
+                if (((IControlNode) activityNode).isFinalNode()) {
+                    nodes.append(defineFinalNode(activityNode)); // create final node and set next action node
+                } else if (((IControlNode) activityNode).isFlowFinalNode()) {
+                    nodes.append(defineFlowFinal(activityNode)); // create flow final and set next action node
+                } else if (((IControlNode) activityNode).isInitialNode()) {
+                    nodes.append(defineInitialNode(activityNode)); // create initial node and set next action node
+                } else if (((IControlNode) activityNode).isForkNode()) {
+                    nodes.append(defineFork(activityNode)); // create fork node and set next action node
+                } else if (((IControlNode) activityNode).isJoinNode()) {
+                    nodes.append(defineJoin(activityNode)); // create join node and set next action node
+                } else if (((IControlNode) activityNode).isDecisionNode()) {
+                    nodes.append(defineDecision(activityNode)); // create decision node and set next action node
+                }else if(((IControlNode) activityNode).isMergeNode()){
+                    nodes.append(defineMerge(activityNode)); // create merge node and set next action node
+                }
+            } else if (activityNode instanceof IActivityParameterNode) {
+                if (activityNode.getOutgoings().length > 0) {
+                    nodes.append(defineInputParameterNode(activityNode));
+                } else if (activityNode.getIncomings().length > 0) {
+                    nodes.append(defineOutputParameterNode(activityNode));
+                } else {
+                    activityNode = null;
+                }
+
+            } else if (activityNode instanceof IObjectNode && !(activityNode instanceof IPin)) {
+                nodes.append(defineObjectNode(activityNode));
+            }
+        }
+
+
+
+
+
+        return nodes.toString();
     }
+
+    private Object defineValueSpecification(IActivityNode activityNode) throws ParsingException{
+        ADUtils adUtils = defineADUtils();
+
+        dValueSpecification = new ADDefineValueSpecification(ad, alphabetNode, adUtils);
+
+        return dValueSpecification.defineValueSpecification(activityNode);
+    }
+
+
 
     private String defineAction(IActivityNode activityNode) throws ParsingException {
         ADUtils adUtils = defineADUtils();

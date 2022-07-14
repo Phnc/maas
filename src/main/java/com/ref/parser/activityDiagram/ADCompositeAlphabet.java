@@ -13,17 +13,17 @@ public class ADCompositeAlphabet extends ADAlphabet{
 	private HashMap<Pair<IActivity,String>, ArrayList<String>> allAlphabets = new HashMap<>();
 	private HashMap<Pair<IActivity,String>,String> allSyncChannels = new HashMap<Pair<IActivity,String>, String>();
 	private HashMap<Pair<IActivity,String>,String> allSyncObject= new HashMap<Pair<IActivity,String>, String>();
-	
+
 	public ADCompositeAlphabet(IActivity ad) {
 		super(ad);
 		alphabetList = new ArrayList<>();
 		allAlphabets = new HashMap<>();
 	}
-	
+
 	public HashMap<Pair<IActivity,String>, ArrayList<String>> getAlphabetNodes() {
 		return alphabetAD;
 	}
-	
+
 	public HashMap<Pair<IActivity,String>, ArrayList<String>> getAllAlphabetNodes() {
 		for(ADAlphabet alphabet: this.alphabetList) {//For each ADAlphabet of the List
 			//If not leaf
@@ -37,7 +37,7 @@ public class ADCompositeAlphabet extends ADAlphabet{
 		allAlphabets.putAll(alphabetAD);
 		return allAlphabets;
 	}
-	
+
 	private HashMap<Pair<IActivity,String>, ArrayList<String>> getLeafAlphabet(ADAlphabet alphabet){
 		//while not leaf
 		if(alphabet instanceof ADCompositeAlphabet && !((ADCompositeAlphabet)alphabet).alphabetList.isEmpty()) {
@@ -46,10 +46,10 @@ public class ADCompositeAlphabet extends ADAlphabet{
 				allAlphabets.putAll(getLeafAlphabet(listAlphabet));
 			}
 		}
-		
+
 		return alphabet.alphabetAD;
 	}
-	
+
 	public HashMap<Pair<IActivity,String>,String> getAllsyncChannelsEdge() {
 		for (ADAlphabet alphabet : this.alphabetList) {//For each ADAlphabet of the List
 			//If not leaf
@@ -63,7 +63,7 @@ public class ADCompositeAlphabet extends ADAlphabet{
 		allSyncChannels.putAll(this.syncChannelsEdge);
 		return allSyncChannels;
 	}
-	
+
 	private HashMap<Pair<IActivity,String>,String> getLeafsyncChannelsEdge(ADAlphabet alphabet){
 		//while not leaf
 		if(alphabet instanceof ADCompositeAlphabet && !((ADCompositeAlphabet)alphabet).alphabetList.isEmpty()) {
@@ -74,7 +74,7 @@ public class ADCompositeAlphabet extends ADAlphabet{
 		}
 		return alphabet.syncChannelsEdge;
 	}
-	
+
 	public HashMap<Pair<IActivity,String>,String> getAllsyncObjectsEdge() {
 		for (ADAlphabet alphabet : this.alphabetList) {//For each ADAlphabet of the List
 			//If not leaf
@@ -88,7 +88,7 @@ public class ADCompositeAlphabet extends ADAlphabet{
 		allSyncObject.putAll(this.syncObjectsEdge);
 		return allSyncObject;
 	}
-	
+
 	private HashMap<Pair<IActivity,String>,String> getLeafsyncObjectsEdge(ADAlphabet alphabet){
 		//while not leaf
 		if(alphabet instanceof ADCompositeAlphabet && !((ADCompositeAlphabet)alphabet).alphabetList.isEmpty()) {
@@ -99,7 +99,7 @@ public class ADCompositeAlphabet extends ADAlphabet{
 		}
 		return alphabet.syncObjectsEdge;
 	}
-	
+
 	public void add(ADAlphabet adAlphabet) {
 		this.alphabetList.add(adAlphabet);
 	}
