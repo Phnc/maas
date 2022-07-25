@@ -1,58 +1,65 @@
 <html xmlns:th="http://www.thymeleaf.org">
-<head> 
-<title> Ajax Spring File Upload Example </title> 
-</head> 
+
+<head>
+    <title> Ajax Spring File Upload Example </title>
+</head>
+
 <body>
 
 <!-- HTML5 Input Form Elements -->
 <input id="fileupload" type="file" name="fileupload" />
-<button id="upload-button2" onclick="uploadFile2()"> Determinism </button>
-<button id="upload-button" onclick="uploadFile()"> Deadlock </button>
+<button id="upload-button" onclick="getDiagrams()"> Test </button>
+
 
 <!-- Ajax JavaScript File Upload to Spring Boot Logic -->
 <script>
-async function uploadFile() {
-  let formData = new FormData(); 
-  formData.append("file", fileupload.files[0]);
+    async function getDiagrams() {
+        let formData = new FormData();
+        formData.append("file", fileupload.files[0]);
 
-  let response = await fetch('/upload', {
-    method: "POST", 
-    body: formData
-  })
-      .then((res) => { return res.blob(); })
-      .then((data) => {
-          var a = document.createElement("a");
-          a.href = window.URL.createObjectURL(data);
-          a.download = "FILENAME.asta";
-          a.click();
-      });
+        let response = await fetch('/getDiagrams', {
+            method: "POST",
+            body: formData
+        })
+            .then(function (response) {
+                // The response is a Response instance.
+                // You parse the data into a useable format using `.json()`
+                return response.json();
+            })
+            .then(function (data) {
+                // `data` is the parsed version of the JSON returned from the above endpoint.
+                console.log(data);  // { "userId": 1, "id": 1, "title": "...", "body": "..." }
+            });
 
-  if (response.status == 200) {
-    alert("File successfully uploaded.");
-  }
-}
+        console.log(response);
 
-async function uploadFile2() {
-    let formData = new FormData();
-    formData.append("file", fileupload.files[0]);
-
-    let response = await fetch('/upload2', {
-        method: "POST",
-        body: formData
-    })
-        .then((res) => { return res.blob(); })
-        .then((data) => {
-            var a = document.createElement("a");
-            a.href = window.URL.createObjectURL(data);
-            a.download = "FILENAME.asta";
-            a.click();
-        });
-
-    if (response.status == 200) {
-        alert("File successfully uploaded.");
+        if (response.status == 200) {
+            alert("File successfully uploaded.");
+        }
     }
-}
+
+    async function validateAstah() {
+        let formData = new FormData();
+        formData.append("file", fileupload.files[0]);
+
+        let response = await fetch('/validateAstahFile?validationType=determinism&diagramName=submitData', {
+            method: "POST",
+            body: formData
+        })
+            .then((res) => { return res.blob(); })
+            .then((data) => {
+                var a = document.createElement("a");
+                a.href = window.URL.createObjectURL(data);
+                a.download = "FILENAME.asta";
+                a.click();
+            });
+
+        if (response.status == 200) {
+            alert("File successfully uploaded.");
+        }
+    }
 </script>
 
-</body> 
+</body>
+
 </html>

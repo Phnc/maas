@@ -31,6 +31,11 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-boot-starter</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<dependency>
 			<groupId>com.change_vision.astah</groupId>
 			<artifactId>astah-api</artifactId>
 			<version>${astah.version}</version>
