@@ -11,6 +11,7 @@ import com.ref.ActivityController;
 import com.ref.ui.CheckingProgressBar;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -34,6 +35,7 @@ import java.util.List;
 @RestController
 public class MaasApplication {
 
+	private final static String PATH = "/error";
 	public static void main(String[] args) {
 		//SpringApplication.run(MaasApplication.class, args);
 		SpringApplicationBuilder builder = new SpringApplicationBuilder(MaasApplication.class);
@@ -43,7 +45,7 @@ public class MaasApplication {
 		ConfigurableApplicationContext context = builder.run(args);
 	}
 
-	@RequestMapping("/index")
+	@GetMapping("/index")
 	public String index() {
 		return "uploader.html";
 	}
