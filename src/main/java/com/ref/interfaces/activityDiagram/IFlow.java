@@ -1,6 +1,8 @@
 package com.ref.interfaces.activityDiagram;
 
-public interface IFlow extends INamedElement{	
+import com.ref.interfaces.INamedElement;
+
+public interface IFlow extends INamedElement {
 
 	IActivityNode getTarget();
 

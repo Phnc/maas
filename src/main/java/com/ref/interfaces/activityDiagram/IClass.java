@@ -1,5 +1,7 @@
 package com.ref.interfaces.activityDiagram;
 
-public interface IClass extends INamedElement{
+import com.ref.interfaces.INamedElement;
+
+public interface IClass extends INamedElement {
 
 }

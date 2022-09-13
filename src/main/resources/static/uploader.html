@@ -141,9 +141,10 @@
         })
             .then((res) => { return res.blob(); })
             .then((data) => {
+                console.log(data);
                 var a = document.createElement("a");
                 a.href = window.URL.createObjectURL(data);
-                a.download = "FILENAME.asta";
+                a.download = `${diagramName}.asta`;
                 a.click();
             });
 

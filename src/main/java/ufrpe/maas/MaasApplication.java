@@ -5,9 +5,13 @@ import com.change_vision.jude.api.inf.AstahAPI;
 import com.change_vision.jude.api.inf.exception.ProjectNotFoundException;
 import com.change_vision.jude.api.inf.model.IActivityDiagram;
 import com.change_vision.jude.api.inf.model.INamedElement;
+import com.change_vision.jude.api.inf.model.IStateMachineDiagram;
 import com.change_vision.jude.api.inf.project.ModelFinder;
 import com.change_vision.jude.api.inf.project.ProjectAccessor;
 import com.ref.ActivityController;
+import com.ref.StateMachineController;
+import com.ref.astah.statemachine.adapter.StateMachine;
+import com.ref.astah.statemachine.adapter.StateMachineDiagram;
 import com.ref.ui.CheckingProgressBar;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -53,7 +57,7 @@ public class MaasApplication {
 	public static INamedElement[] findElements(ProjectAccessor projectAccessor) throws ProjectNotFoundException {
 		INamedElement[] foundElements = projectAccessor.findElements(new ModelFinder() {
 			public boolean isTarget(INamedElement namedElement) {
-				return namedElement instanceof IActivityDiagram;
+				return namedElement instanceof IActivityDiagram || namedElement instanceof IStateMachineDiagram;
 			}
 		});
 		return foundElements;
@@ -99,7 +103,7 @@ public class MaasApplication {
 	@PostMapping("/validateAstahFile")
 	public ResponseEntity<?> validateAstah(@RequestParam("file")MultipartFile file, @RequestParam("validationType") String validationType, @RequestParam("diagramName") String diagramName){
 		try {
-			ActivityController.VerificationType type = validationType.equals("determinism") ? ActivityController.VerificationType.DETERMINISM : ActivityController.VerificationType.DEADLOCK;
+
 
 			String filePath = saveFile(file);
 
@@ -109,15 +113,35 @@ public class MaasApplication {
 			INamedElement[] findElements = findElements(projectAccessor);
 			INamedElement diagram = Arrays.stream(findElements).filter(e -> e.getName().equals(diagramName)).findFirst().orElse(null);
 
-			IActivityDiagram ad = (IActivityDiagram) diagram;
+			boolean isActivity = diagram instanceof IActivityDiagram;
+			boolean isStateMachine = diagram instanceof IStateMachineDiagram;
 
-			ActivityController ac = ActivityController.getInstance();
 			CheckingProgressBar bar = new CheckingProgressBar();
 
-			ac.AstahInvocation(ad, type, bar);
+			if(isActivity){
+				ActivityController.VerificationType type = validationType.equals("determinism") ? ActivityController.VerificationType.DETERMINISM : ActivityController.VerificationType.DEADLOCK;
 
+				IActivityDiagram ad = (IActivityDiagram) diagram;
+
+				ActivityController ac = ActivityController.getInstance();
+
+
+				ac.AstahInvocation(ad, type, bar);
+
+
+			}
+
+			else if (isStateMachine){
+				StateMachineController.VerificationType type = validationType.equals("determinism") ? StateMachineController.VerificationType.DETERMINISM : StateMachineController.VerificationType.DEADLOCK;
+
+				IStateMachineDiagram smDiagram = (IStateMachineDiagram) diagram;
+
+				StateMachineController smc = StateMachineController.getInstance();
+
+				smc.AstahInvocation(smDiagram, type, bar);
+
+			}
 			bar.dispose();
-
 			projectAccessor.save();
 			projectAccessor.close();
 

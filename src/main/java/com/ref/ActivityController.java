@@ -68,15 +68,6 @@ public class ActivityController {
 		} 
 		return controller;
 	}
-	/*
-	public void OpenMBEEInvocation(String url, String login, String password, String idActivity, VerificationType type, CheckingProgressBar progressBar) throws ClientProtocolException, IOException, FDRException, ParsingException, WellFormedException, JSONException, HttpException{
-	
-		com.ref.openmbee.adapter.Activity activity = Communication.buildActivity(url,login,password,idActivity);
-		Communication.resetStatics();
-		System.out.println(activity); 
-		HashMap<IActivity, List<String>> counterExample = checkProperty(activity,activity.getActivityDiagram(),type,progressBar);
-	}*/
-
 	
 	
 	public void AstahInvocation(IDiagram diagram, VerificationType type, CheckingProgressBar progressBar) throws FDRException,ParsingException, FileNotFoundException, UnsupportedEncodingException, WellFormedException{		

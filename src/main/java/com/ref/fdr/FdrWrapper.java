@@ -19,6 +19,7 @@ import com.change_vision.jude.api.inf.editor.TransactionManager;
 import com.change_vision.jude.api.inf.exception.InvalidEditingException;
 import com.ref.log.Logador;
 import com.ref.parser.activityDiagram.ADParser;
+import com.ref.parser.stateMachine.SMParser;
 //import com.ref.refinement.activityDiagram.CounterExamples.CounterExType;
 import com.ref.ui.CheckingProgressBar;
 
@@ -70,7 +71,7 @@ public class FdrWrapper {
 
 	private Class<?> deadlockCounterexampleClass;
 
-    private Class<?> determinismCounterexampleClass;
+	private Class<?> determinismCounterexampleClass;
 
 	public boolean loadFDR(String path) {
 
@@ -427,7 +428,7 @@ public class FdrWrapper {
 	
 	public List<String> checkDeadlock(String filename, ADParser parser, String nameDiagram, CheckingProgressBar progressBar) throws Exception{
 		//returns the trace
-		
+
 	/*
 	0 = error
 	1 = deadlock free
