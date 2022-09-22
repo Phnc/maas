@@ -748,7 +748,8 @@ public class CounterExampleAstah {
 			typeAdded = new HashMap<>();
 
 			IDiagram[] diagrams = AstahAPI.getAstahAPI().getProjectAccessor().getProject().getDiagrams();
-			IDiagram diagram = AstahAPI.getAstahAPI().getViewManager().getDiagramViewManager().getCurrentDiagram();
+			//IDiagram diagram = AstahAPI.getAstahAPI().getViewManager().getDiagramViewManager().getCurrentDiagram();
+			IDiagram diagram = AstahAPI.getAstahAPI().getProjectAccessor().getProject().getDiagrams()[0];
 
 			ProjectAccessor prjAccessor = AstahAPI.getAstahAPI().getProjectAccessor();
 			IModel project = prjAccessor.getProject();

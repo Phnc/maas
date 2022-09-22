@@ -13,6 +13,7 @@ import com.ref.StateMachineController;
 import com.ref.astah.statemachine.adapter.StateMachine;
 import com.ref.astah.statemachine.adapter.StateMachineDiagram;
 import com.ref.ui.CheckingProgressBar;
+import io.swagger.annotations.ApiParam;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.error.ErrorController;
@@ -101,7 +102,7 @@ public class MaasApplication {
 	}
 
 	@PostMapping("/validateAstahFile")
-	public ResponseEntity<?> validateAstah(@RequestParam("file")MultipartFile file, @RequestParam("validationType") String validationType, @RequestParam("diagramName") String diagramName){
+	public ResponseEntity<?> validateAstah(@ApiParam(value="File", required=true) @RequestPart MultipartFile file, @RequestParam("validationType") String validationType, @RequestParam("diagramName") String diagramName){
 		try {
 
 
